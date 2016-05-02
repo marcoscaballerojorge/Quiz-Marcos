@@ -1,4 +1,3 @@
-
 <table>
   <% for (var i in quizzes) { %>        
      <tr>
@@ -7,6 +6,12 @@
         </td>
         <td>
            <a href="/quizzes/<%= quizzes[i].id %>/edit"><button>editar</button></a>
+        </td>
+        <td>
+           <a href="/quizzes/<%= quizzes[i].id %>?_method=DELETE" 
+              onClick="return confirm('Borrar: <%= quizzes[i].question %>');">
+              <button>borrar</button>
+           </a>
         </td>
      </tr> 
   <% } %>
