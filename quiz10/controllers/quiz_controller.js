@@ -1,4 +1,19 @@
 var models = require('../models');
+
+// Autoload el quiz asociado a :quizId
+exports.load = function(req, res, next, quizId) {
+	models.Quiz.findById(quizId)
+  		.then(function(quiz) {
+      		if (quiz) {
+        		req.quiz = quiz;
+        		next();
+      		} else { 
+      			next(new Error('No existe quizId=' + quizId));
+      		}
+        })
+        .catch(function(error) { next(error); });
+};
+
 // GET /quizzes
 exports.index = function(req, res, next) {
 	models.Quiz.findAll()
@@ -13,46 +28,20 @@ exports.index = function(req, res, next) {
 
 // GET /quizzes/:id
 exports.show = function(req, res, next) {
-	models.Quiz.findById(req.params.quizId)
- 		.then(function(quiz) {
- 			if (quiz) {
- 				var answer = req.query.answer || '';
- 
-		.then(function(quiz) {
-			if (quiz) {
-				var answer = req.query.answer || '';
+	var answer = req.query.answer || '';
 
-	res.render('quizzes/show', {quiz: quiz,
-								                answer: answer});
-		    } else {
-		    	throw new Error('No hay preguntas en la BBDD.');
-		    }
-		})
-		.catch(function(error) {
-			next(error);
-					})
+	res.render('quizzes/show', {quiz: req.quiz,
+								answer: answer});
+};
  
  // GET /check
  exports.check = function(req, res, next) {
-models.Quiz.findOne() // Busca la primera pregunta existente
-		.then(function(quiz) {
-			if (quiz) {
-				var answer = req.query.answer || "";
 
-	var answer = answer ;
+	var answer = req.query.answer || "";
 
-	var result = answer ==== quiz.answer ? 'Correcta' : 'Incorrecta';
+	var result = answer === req.quiz.answer ? 'Correcta' : 'Incorrecta';
 
-	res.render('quizzes/result', { result: result, 
-											   answer: answer });
-		    } else {
-		    	throw new Error('No hay preguntas en la BBDD.');
-		    }
-} else {
-				throw new Error('No existe ese quiz en la BBDD.');
-			
-		})
-		.catch(function(error) {
-			next(error);
-		});
+	res.render('quizzes/result', { quiz: req.quiz, 
+								   result: result, 
+								   answer: answer });
  };
