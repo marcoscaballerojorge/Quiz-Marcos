@@ -1,16 +1,4 @@
-<form method="get" action="/quizzes">
- <table>
-   <tr>
-     <td>
-       <input name="search" placeholder="Introduzca palabras clave"/>
-     </td>
-     <td>
-       <input type="submit" value="Buscar"/>
-     </td>
-   </tr>
- </table>
-</form>
-<table>
+
   <% for (var i in quizzes) { %>        
      <tr>
         <td>
@@ -28,5 +16,10 @@
      </tr> 
   <% } %>
 </table>
+<form action="/quizes" method="get">
+    <p>Buscador de preguntas: </p>
+    <input type="text" name="search" value="texto a buscar">
+    <input type="submit" value="Buscar">
+  </form>
 
 <a href="/quizzes/new"><button type="button">Crear pregunta</button></a>
